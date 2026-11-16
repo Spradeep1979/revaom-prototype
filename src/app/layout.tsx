@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./motion.css";
 import SmoothScroll from "@/components/SmoothScroll";
 
 export const metadata: Metadata = {
-  title: "REVAÔM — POISE Anti-Aging Serum | ActivIQ™",
+  title: "REVAÔM — RESET Clarifying Serum | ActivIQ™",
   description:
-    "Advanced anti-aging serum powered by Advanced Bio-Peptides and Botanical Biomimetics with ActivIQ™ cellular delivery. Luxury French dermaceutical skincare.",
+    "Targeted clarifying serum powered by Salicylic Acid, Clarifying Peptides, and Zinc PCA with ActivIQ™ cellular delivery. Precision skincare for acne-prone skin.",
 };
 
 export default function RootLayout({
@@ -14,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark bg-[#060c18]">
+    <html lang="en" className="dark bg-[#0f0206]">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -27,7 +28,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="bg-[#060c18] text-[#f1f5f9] antialiased overflow-x-hidden selection:bg-blue-500/20 selection:text-white">
+      <body className="bg-[#0f0206] text-[#eee4d8] antialiased overflow-x-clip selection:bg-[#3a0716]/40 selection:text-[#eee4d8]">
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

@@ -1,0 +1,16 @@
+/* Motion + focus styles for the hero, explosion and shop (values mirror src/lib/motion.ts) */
+/* ---------- Hero pulsing rings (CSS only, no canvas cost) ---------- */
+@keyframes revaom-ring {
+  0% { transform: translate(-50%, -50%) scale(0.55); opacity: 0; }
+  15% { opacity: var(--ring-opacity, 0.5); }
+  100% { transform: translate(-50%, -50%) scale(var(--ring-max, 2.4)); opacity: 0; }
+}
+.hero-ring { transform: translate(-50%, -50%) scale(1); }
+
+/* ---------- Visible focus for every interactive control ---------- */
+:where(button, a, [role="button"], input, select, textarea):focus-visible {
+  outline: 1.5px solid #eee4d8;
+  outline-offset: 3px;
+  border-radius: 9999px;
+}
+:where(.ingredient-card, .slider-card):focus-visible { border-radius: 0.75rem; }

@@ -5,20 +5,21 @@
   --font-cormorant: 'Cormorant Garamond', Georgia, serif;
   --font-jakarta: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   
-  /* POISE Rich Navy Blue Palette */
-  --navy-950: #060c18;
-  --navy-900: #0b172a;
-  --navy-850: #0f213d;
-  --navy-800: #152d52;
-  --navy-700: #1c3c6d;
-  --navy-600: #254e8c;
-  --sapphire-accent: #38bdf8;
-  --white-crisp: #f8fafc;
+  /* RESET Deep Burgundy / Maroon Palette — sampled from #3a0716 / #3b0714 */
+  --burgundy-950: #0f0206;  /* deepest near-black */
+  --burgundy-900: #1a0409;  /* very deep maroon */
+  --burgundy-850: #240610;  /* base background */
+  --burgundy-800: #3a0716;  /* primary brand burgundy */
+  --burgundy-700: #4f1020;  /* mid burgundy */
+  --burgundy-600: #6b1e30;  /* lighter panel */
+  --burgundy-500: #8c2a3e;  /* accent/hover */
+  --cream-accent: #eee4d8;  /* cream/off-white from packaging */
+  --white-crisp: #fdf8f5;   /* warm white */
 }
 
 body {
-  background-color: var(--navy-950);
-  color: #f1f5f9;
+  background-color: var(--burgundy-950);
+  color: var(--white-crisp);
   font-family: var(--font-jakarta);
   overflow-x: hidden;
   user-select: none;
@@ -39,30 +40,30 @@ body {
   font-family: var(--font-jakarta);
 }
 
-/* Glassmorphism Navy Luxury Styling */
+/* Glassmorphism Burgundy Luxury Styling */
 .luxury-glass-navy {
-  background: rgba(11, 23, 42, 0.78);
+  background: rgba(42, 6, 16, 0.78);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.10);
 }
 
 .luxury-card-navy {
-  background: linear-gradient(145deg, rgba(15, 33, 61, 0.9) 0%, rgba(8, 16, 31, 0.95) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 30px 65px -15px rgba(2, 6, 18, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  background: linear-gradient(145deg, rgba(58, 7, 22, 0.90) 0%, rgba(26, 4, 9, 0.95) 100%);
+  border: 1px solid rgba(238, 228, 216, 0.12);
+  box-shadow: 0 30px 65px -15px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(238, 228, 216, 0.10);
 }
 
 .luxury-glass-subtle {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(238, 228, 216, 0.04);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(238, 228, 216, 0.08);
 }
 
 /* Noise overlay */
 .bg-noise {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 0);
+  background-image: radial-gradient(rgba(238, 228, 216, 0.03) 1px, transparent 0);
   background-size: 24px 24px;
 }
 
@@ -73,16 +74,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #060c18;
+  background: #0f0206;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1c3c6d;
+  background: #3a0716;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #254e8c;
+  background: #6b1e30;
 }
 
 /* Hotspot Pulse Animation */
@@ -115,7 +116,7 @@ body {
   -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
 }
 
-/* Luxury Archway Silhouette (Noolam Reference) */
+/* Luxury Archway Silhouette */
 .luxury-arch-css {
   clip-path: polygon(
     0% 100%,
@@ -143,3 +144,9 @@ body {
 .preserve-3d {
   transform-style: preserve-3d;
 }
+
+/* Ingredient Explosion - will-change for GSAP */
+.ingredient-node {
+  will-change: transform, opacity;
+}
+

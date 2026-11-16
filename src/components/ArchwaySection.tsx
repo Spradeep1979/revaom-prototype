@@ -4,104 +4,76 @@ import { useRef, useEffect } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Sparkles, Eye } from "lucide-react";
+
+interface Portal {
+  id: string;
+  num: string;
+  title: string;
+  sub: string;
+  image: string;
+}
+
+const portals: Portal[] = [
+  {
+    id: "reset-box",
+    num: "01",
+    title: "The Artisan Box",
+    sub: "Deep Burgundy Precision Housing",
+    image: "/images/portal-reset-box.jpg",
+  },
+  {
+    id: "reset-logo",
+    num: "02",
+    title: "The REVAÔM Sigil",
+    sub: "Embossed Luxury Insignia",
+    image: "/images/portal-reset-logo.jpg",
+  },
+  {
+    id: "reset-chemistry",
+    num: "03",
+    title: "The Chemistry",
+    sub: "Targeted Clarifying Formulation",
+    image: "/images/portal-reset-chemistry.jpg",
+  },
+  {
+    id: "reset-ingredients",
+    num: "04",
+    title: "The Actives",
+    sub: "Clinical-Grade Ingredient Dossier",
+    image: "/images/portal-reset-ingredients.jpg",
+  },
+];
 
 export default function ArchwaySection() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const heroArchRef = useRef<HTMLDivElement>(null);
-  const archGroupRef = useRef<HTMLDivElement>(null);
-
-  const archways = [
-    {
-      id: "dropper",
-      num: "01",
-      label: "Cryo-Pipette",
-      image: "/images/arch-dropper.jpg",
-    },
-    {
-      id: "monument",
-      num: "02",
-      label: "Flint Glass Flacon",
-      image: "/images/arch-duo.jpg",
-      isHeroCenter: true,
-    },
-    {
-      id: "box",
-      num: "03",
-      label: "Artisan Box",
-      image: "/images/arch-box.jpg",
-    },
-    {
-      id: "label",
-      num: "04",
-      label: "ActivIQ™ Seal",
-      image: "/images/arch-label.jpg",
-    },
-  ];
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     const section = sectionRef.current;
-    const heroArch = heroArchRef.current;
-    const archGroup = archGroupRef.current;
-    if (!section || !heroArch || !archGroup) return;
+    if (!section) return;
 
     const ctx = gsap.context(() => {
-      // Pin section and scrub the central arch expansion
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: "+=140%",
-          pin: true,
-          scrub: 1, // Smooth cinematic scrub
-          anticipatePin: 1,
+      // Subtle GSAP scale parallax effect on the images inside the locked arch frames:
+      // As the user scrolls down through the section, the images slowly zoom out from 1.20 to 1.0
+      // while the outer arch frames stay mathematically locked in a clean horizontal row.
+      gsap.fromTo(
+        ".arch-parallax-img",
+        {
+          scale: 1.2,
         },
-      });
-
-      // Side arches fade and spread outward
-      tl.to(".side-arch-left", {
-        x: -200,
-        opacity: 0.1,
-        scale: 0.8,
-        ease: "power1.inOut",
-      }, 0);
-
-      tl.to(".side-arch-right", {
-        x: 200,
-        opacity: 0.1,
-        scale: 0.8,
-        ease: "power1.inOut",
-      }, 0);
-
-      // Hero archway expands to reveal full image across the viewport
-      tl.to(heroArch, {
-        scale: 2.3,
-        borderRadius: "28px",
-        ease: "power2.inOut",
-      }, 0);
-
-      // Arch mask morphs from arched silhouette to full frame
-      tl.to(".hero-arch-mask", {
-        clipPath: "polygon(0% 100%, 0% 0%, 100% 0%, 100% 100%)",
-        ease: "power2.inOut",
-      }, 0.2);
-
-      // Headline fades out to immerse into the visual
-      tl.to(".arch-headline", {
-        opacity: 0,
-        y: -40,
-        ease: "none",
-      }, 0);
-
-      // Revealing overlay caption inside the expanded image
-      tl.from(".arch-expanded-caption", {
-        opacity: 0,
-        y: 30,
-        ease: "power2.out",
-      }, 0.6);
-
+        {
+          scale: 1.0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1, // Smooth weighted scrub
+            invalidateOnRefresh: true,
+          },
+        }
+      );
     }, section);
 
     return () => {
@@ -113,124 +85,69 @@ export default function ArchwaySection() {
     <section
       ref={sectionRef}
       id="archway-section"
-      className="relative min-h-screen w-full flex flex-col justify-center items-center px-6 sm:px-12 lg:px-20 py-36 sm:py-48 overflow-hidden select-none bg-[#040812]"
+      className="relative min-h-screen w-full flex flex-col justify-center items-center px-6 sm:px-12 lg:px-20 py-36 sm:py-48 overflow-hidden select-none bg-[#0f0206]"
     >
       {/* Background Atmosphere */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(14,34,72,0.4)_0%,rgba(4,8,18,0.98)_75%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(58,7,22,0.35)_0%,rgba(15,2,6,0.98)_75%)] pointer-events-none" />
       <div className="absolute inset-0 bg-noise opacity-20 pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-7xl flex flex-col justify-center my-auto">
         
         {/* Minimalist Section Headline */}
-        <div className="arch-headline text-center max-w-xl mx-auto mb-8">
-          <span className="text-[10px] font-mono tracking-[0.35em] text-cyan-300 uppercase block mb-2">
-            THE ARCHITECTURE
+        <div className="text-center max-w-xl mx-auto mb-14 sm:mb-16">
+          <span className="text-[10px] font-mono tracking-[0.35em] text-[#eee4d8]/50 uppercase block mb-2.5">
+            ANATOMY OF RESET
           </span>
-          <h2 className="font-cinzel text-3xl sm:text-4xl lg:text-5xl font-light text-white tracking-wide">
+          <h2 className="font-cinzel text-3xl sm:text-4xl lg:text-5xl font-light text-[#eee4d8] tracking-wide">
             Four Portals. Pure Form.
           </h2>
+          <p className="mt-2 text-xs font-mono text-[#eee4d8]/40 tracking-wider">
+            The architectural breakdown of REVAÔM RESET engineering.
+          </p>
         </div>
 
-        {/* 4 ARCHWAYS DISPLAY GRID (Stripped of clutter, larger scale) */}
-        <div
-          ref={archGroupRef}
-          className="relative flex items-center justify-center gap-6 sm:gap-8 lg:gap-10 w-full max-w-6xl mx-auto h-[480px] sm:h-[540px]"
-        >
-          {/* Arch 1 (Left Outer) */}
-          <div className="side-arch-left hidden sm:flex flex-col items-center">
-            <div className="luxury-arch-css relative w-40 sm:w-48 lg:w-52 h-72 sm:h-84 lg:h-92 overflow-hidden shadow-2xl border border-white/10 group">
-              <Image
-                src={archways[0].image}
-                alt={archways[0].label}
-                fill
-                sizes="(max-width: 768px) 180px, 240px"
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-              <div className="absolute bottom-4 left-3 right-3 text-center">
-                <span className="text-[10px] font-mono tracking-widest text-cyan-300 block uppercase">
-                  {archways[0].num}
+        {/* 4 ARCHWAYS: UNIFORM DIMENSIONS, EXACT 3:4 ASPECT RATIO, MATHEMATICAL ALIGNMENT */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 lg:gap-8 w-full max-w-6xl mx-auto items-start justify-center">
+          {portals.map((portal) => (
+            <div
+              key={portal.id}
+              className="flex flex-col items-center group w-full"
+            >
+              {/* Strict Uniform CSS Container with Roman Archway Silhouette & Aspect 3/4 */}
+              <div className="relative w-full aspect-[3/4] rounded-t-[140px] sm:rounded-t-[160px] rounded-b-2xl overflow-hidden border border-[#eee4d8]/12 bg-gradient-to-b from-[#3a0716]/30 via-[#1a0409]/60 to-[#0f0206] shadow-[0_25px_60px_rgba(0,0,0,0.85)] group-hover:border-[#eee4d8]/30 transition-colors duration-500">
+                
+                {/* Parallax Image Target: Zoom out inside locked frame */}
+                <div className="arch-parallax-img absolute inset-0 w-full h-full will-change-transform">
+                  <Image
+                    src={portal.image}
+                    alt={portal.title}
+                    fill
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    className="object-cover object-center filter contrast-105 group-hover:scale-105 transition-transform duration-700 ease-out"
+                    priority
+                  />
+                </div>
+
+                {/* Subtle Ambient Shadow & Luxury Vignette */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
+
+                {/* Subtle Roman Arch Number Badge */}
+                <div className="absolute top-5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-black/50 backdrop-blur-md border border-white/10 text-[9px] font-mono text-cyan-300 tracking-widest pointer-events-none">
+                  {portal.num}
+                </div>
+              </div>
+
+              {/* Single, Elegant, Ultra-Minimalist Label Centered Perfectly Below Each Arch */}
+              <div className="mt-4 sm:mt-5 text-center">
+                <span className="text-[10px] sm:text-[11px] font-mono tracking-widest uppercase text-[#eee4d8]/60 group-hover:text-[#eee4d8]/90 transition-colors block">
+                  {portal.title}
                 </span>
-                <span className="text-xs font-cinzel text-white block mt-0.5">
-                  {archways[0].label}
+                <span className="text-[9px] font-mono tracking-wider text-[#eee4d8]/30 block mt-0.5 opacity-80 group-hover:opacity-100 transition-opacity">
+                  {portal.sub}
                 </span>
               </div>
             </div>
-          </div>
-
-          {/* Arch 2: THE HERO CENTRAL ARCHWAY (Expands on scrub) */}
-          <div
-            ref={heroArchRef}
-            className="relative z-20 flex flex-col items-center will-change-transform"
-          >
-            <div className="hero-arch-mask luxury-arch-css relative w-64 sm:w-76 lg:w-88 h-88 sm:h-[440px] lg:h-[480px] overflow-hidden shadow-[0_30px_70px_rgba(0,0,0,0.95)] border border-white/20 group">
-              <Image
-                src={archways[1].image}
-                alt={archways[1].label}
-                fill
-                priority
-                sizes="(max-width: 768px) 350px, 500px"
-                className="object-cover filter contrast-105 group-hover:scale-105 transition-transform duration-700"
-              />
-              
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-
-              {/* Reveal Overlay on Scrub Expansion */}
-              <div className="arch-expanded-caption absolute inset-x-6 bottom-10 z-20 flex flex-col items-center text-center">
-                <span className="text-xs font-mono tracking-[0.3em] uppercase text-cyan-400">
-                  ActivIQ™ Precision
-                </span>
-                <h3 className="font-cinzel text-2xl sm:text-3xl text-white font-bold tracking-wider mt-1">
-                  REVAÔM POISE
-                </h3>
-              </div>
-            </div>
-          </div>
-
-          {/* Arch 3 (Right Inner) */}
-          <div className="side-arch-right hidden sm:flex flex-col items-center">
-            <div className="luxury-arch-css relative w-40 sm:w-48 lg:w-52 h-72 sm:h-84 lg:h-92 overflow-hidden shadow-2xl border border-white/10 group">
-              <Image
-                src={archways[2].image}
-                alt={archways[2].label}
-                fill
-                sizes="(max-width: 768px) 180px, 240px"
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-              <div className="absolute bottom-4 left-3 right-3 text-center">
-                <span className="text-[10px] font-mono tracking-widest text-cyan-300 block uppercase">
-                  {archways[2].num}
-                </span>
-                <span className="text-xs font-cinzel text-white block mt-0.5">
-                  {archways[2].label}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Arch 4 (Right Outer) */}
-          <div className="side-arch-right hidden lg:flex flex-col items-center opacity-60">
-            <div className="luxury-arch-css relative w-36 sm:w-44 h-64 sm:h-76 overflow-hidden shadow-2xl border border-white/10 group">
-              <Image
-                src={archways[3].image}
-                alt={archways[3].label}
-                fill
-                sizes="180px"
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-              <div className="absolute bottom-4 left-3 right-3 text-center">
-                <span className="text-[10px] font-mono tracking-widest text-cyan-300 block uppercase">
-                  {archways[3].num}
-                </span>
-                <span className="text-xs font-cinzel text-white block mt-0.5">
-                  {archways[3].label}
-                </span>
-              </div>
-            </div>
-          </div>
-
+          ))}
         </div>
 
       </div>

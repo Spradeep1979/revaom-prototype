@@ -24,18 +24,18 @@ const cardsData: MinimalCard[] = [
   {
     id: 0,
     badge: "FLAGSHIP",
-    title: "POISE Flacon",
-    sub: "Deep Cobalt Flint Glass",
-    image: "/images/poise-bottle-cutout.png",
+    title: "RESET Clarifying Serum",
+    sub: "Deep Burgundy Flint Glass",
+    image: "/images/reset-bottle-cutout.jpg",
     imageType: "bottle",
-    price: "$94.00",
+    price: "$78.00",
   },
   {
     id: 1,
     badge: "CASING",
     title: "Artisan Box",
     sub: "UV-Shield Curved Housing",
-    image: "/images/poise-box-cutout.png",
+    image: "/images/reset-box-cutout.jpg",
     imageType: "box",
     price: "Included",
   },
@@ -62,11 +62,11 @@ const cardsData: MinimalCard[] = [
   {
     id: 4,
     badge: "SYNTHESIS",
-    title: "The POISE Ritual",
+    title: "The RESET Ritual",
     sub: "Complete Day & Night Architecture",
-    image: "/images/poise-hero.jpg",
+    image: "/images/reset-hero.jpg",
     imageType: "duo",
-    price: "$94.00",
+    price: "$78.00",
   },
 ];
 
@@ -135,7 +135,7 @@ export default function OverlappingCarousel({ onAddToCart }: OverlappingCarousel
   return (
     <section
       id="showcase-section"
-      className="relative min-h-screen w-full flex flex-col justify-center items-center px-6 sm:px-12 lg:px-20 py-36 sm:py-48 overflow-hidden select-none bg-[#050b16]"
+      className="relative min-h-screen w-full flex flex-col justify-center items-center px-6 sm:px-12 lg:px-20 py-36 sm:py-48 overflow-hidden select-none bg-[#0f0206]"
     >
       {/* Background Navy Glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,40,82,0.4)_0%,rgba(5,11,22,0.98)_75%)] pointer-events-none" />
@@ -145,14 +145,14 @@ export default function OverlappingCarousel({ onAddToCart }: OverlappingCarousel
         
         {/* Minimalist Section Header */}
         <div className="text-center max-w-xl mx-auto mb-10">
-          <span className="text-[10px] font-mono tracking-[0.35em] text-cyan-300 uppercase block mb-2">
+          <span className="text-[10px] font-mono tracking-[0.35em] text-[#eee4d8]/60 uppercase block mb-2">
             THE SPECTRUM
           </span>
           <h2 className="font-cinzel text-3xl sm:text-4xl lg:text-5xl font-light text-white tracking-wide">
-            POISE in Dimension.
+            RESET in Dimension.
           </h2>
           <p className="mt-2 text-xs font-mono text-slate-400 flex items-center justify-center gap-2">
-            <MoveHorizontal className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+            <MoveHorizontal className="w-3.5 h-3.5 text-[#eee4d8]/80 animate-pulse" />
             <span>Drag horizontally to explore</span>
           </p>
         </div>
@@ -197,13 +197,13 @@ export default function OverlappingCarousel({ onAddToCart }: OverlappingCarousel
                 }}
                 className={`absolute w-[320px] sm:w-[380px] lg:w-[410px] h-[480px] sm:h-[540px] rounded-3xl p-8 border transition-colors select-none will-change-transform flex flex-col justify-between ${
                   isCenter
-                    ? "border-cyan-400/50 shadow-[0_30px_70px_rgba(2,6,18,0.95),0_0_35px_rgba(56,189,248,0.25)] bg-gradient-to-b from-[#0f2444] via-[#09172c] to-[#050c18]"
-                    : "border-blue-400/15 shadow-xl bg-[#081528]/80 hover:border-blue-400/30"
+                    ? "border-[#eee4d8]/30/50 shadow-[0_30px_70px_rgba(2,6,18,0.95),0_0_35px_rgba(56,189,248,0.25)] bg-gradient-to-b from-[#0f2444] via-[#09172c] to-[#050c18]"
+                    : "border-[#eee4d8]/15 shadow-xl bg-[#1a0409]/80 hover:border-[#eee4d8]/30"
                 }`}
               >
                 {/* Top Badge */}
                 <div className="flex items-center justify-between pb-3 border-b border-white/10">
-                  <span className="text-[10px] font-mono tracking-widest text-cyan-300 uppercase">
+                  <span className="text-[10px] font-mono tracking-widest text-[#eee4d8]/60 uppercase">
                     {card.badge}
                   </span>
                   <span className="text-[10px] font-mono text-slate-500">
@@ -248,7 +248,7 @@ export default function OverlappingCarousel({ onAddToCart }: OverlappingCarousel
                       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent" />
                       {card.stat && (
                         <div className="absolute bottom-4 left-5">
-                          <span className="font-cinzel text-4xl font-bold text-cyan-400 block">
+                          <span className="font-cinzel text-4xl font-bold text-[#eee4d8]/80 block">
                             {card.stat}
                           </span>
                           <span className="text-[10px] font-mono text-slate-300 tracking-wider">
@@ -270,9 +270,9 @@ export default function OverlappingCarousel({ onAddToCart }: OverlappingCarousel
                       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent" />
                       <div className="absolute bottom-4 left-5">
                         <span className="font-cinzel text-2xl font-bold text-white block">
-                          REVAÔM POISE
+                          REVAÔM RESET
                         </span>
-                        <span className="text-[10px] font-mono text-cyan-300 tracking-wider">
+                        <span className="text-[10px] font-mono text-[#eee4d8]/60 tracking-wider">
                           Full Architecture
                         </span>
                       </div>
@@ -299,8 +299,8 @@ export default function OverlappingCarousel({ onAddToCart }: OverlappingCarousel
                       }}
                       className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-medium text-xs tracking-wider uppercase transition-all shadow-md ${
                         added
-                          ? "bg-emerald-500 text-white"
-                          : "bg-white hover:bg-slate-100 text-slate-950 font-bold shadow-white/20"
+                          ? "bg-[#2a5c40] text-white"
+                          : "bg-white hover:bg-slate-100 text-[#1a0409] font-bold shadow-white/20"
                       }`}
                     >
                       {added ? (
@@ -340,7 +340,7 @@ export default function OverlappingCarousel({ onAddToCart }: OverlappingCarousel
                 onClick={() => setActiveIndex(idx)}
                 className={`transition-all duration-300 rounded-full ${
                   activeIndex === idx
-                    ? "w-8 h-1 bg-cyan-400"
+                    ? "w-8 h-1 bg-[#eee4d8]/60"
                     : "w-1.5 h-1 bg-white/20 hover:bg-white/40"
                 }`}
               />

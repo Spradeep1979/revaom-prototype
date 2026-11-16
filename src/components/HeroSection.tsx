@@ -1,72 +1,175 @@
 "use client";
 
-import Image from "next/image";
+import { useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { BOTTLE_READY_EVENT, bottleScrollState } from "./bottleScrollState";
+import { MOTION, prefersReducedMotion } from "@/lib/motion";
+import { formatPrice, heroShop } from "@/data/shop";
+import { Check } from "lucide-react";
 
 interface HeroSectionProps {
   onExplore?: () => void;
+  onShop?: () => void;
 }
 
-export default function HeroSection({ onExplore }: HeroSectionProps) {
+const HEADING = "RESET";
+
+export default function HeroSection({ onExplore, onShop }: HeroSectionProps) {
+  const heroRef = useRef<HTMLElement>(null);
+
+  /**
+   * Entrance — one timeline (~1.6 s), started only once the GLB + label texture
+   * have loaded: nav fades down, RESET reveals letter by letter, the bottle rises
+   * with a short fade and a half-turn, then the scroll hint starts a slow pulse.
+   */
+  useGSAP(
+    () => {
+      const I = MOTION.intro;
+      const reduced = prefersReducedMotion();
+      // Nav + canvas live outside this component, so look them up as elements
+      // (string selectors are scoped to the hero by useGSAP).
+      const canvasEl = () => document.querySelector<HTMLElement>("#bottle-canvas-wrapper .bottle-canvas");
+      const navEl = () => document.querySelector<HTMLElement>("header");
+
+      // Hidden start state (applied before first paint)
+      gsap.set(navEl(), { opacity: 0, y: reduced ? 0 : I.nav.y });
+      gsap.set(".hero-letter", { yPercent: reduced ? 0 : I.letters.yPercent, opacity: reduced ? 0 : 1 });
+      gsap.set(".hero-eyebrow, .hero-subline", { opacity: 0, y: reduced ? 0 : I.sub.y });
+      gsap.set(".hero-hint", { opacity: 0 });
+      gsap.set(".hero-shop-item", { opacity: 0, y: reduced ? 0 : MOTION.shopIntro.y });
+      gsap.set(canvasEl(), { opacity: 0 });
+      bottleScrollState.intro = reduced ? 1 : 0;
+
+      // Built when the assets are ready, so every target is looked up fresh
+      const play = () => {
+        const tl = gsap.timeline({ defaults: { ease: MOTION.ease.out } });
+        tl.to(navEl(), { opacity: 1, y: 0, duration: I.nav.duration }, I.at.nav)
+          .to(
+            ".hero-letter",
+            reduced
+              ? { opacity: 1, duration: 0.4 }
+              : { yPercent: 0, duration: I.letters.duration, stagger: I.letters.stagger },
+            I.at.letters
+          )
+          .to(".hero-eyebrow, .hero-subline", { opacity: 1, y: 0, duration: I.sub.duration, stagger: 0.08 }, I.at.sub)
+          .to(canvasEl(), { opacity: 1, duration: 0.45, ease: MOTION.ease.soft }, I.at.bottle)
+          .to(".hero-hint", { opacity: 1, duration: I.hint.duration }, I.at.hint)
+          // shop controls are the last items of the entrance
+          .to(
+            ".hero-shop-item",
+            { opacity: 1, y: 0, duration: MOTION.shopIntro.duration, stagger: MOTION.shopIntro.stagger },
+            MOTION.shopIntro.at
+          );
+        if (!reduced) {
+          tl.to(bottleScrollState, { intro: 1, duration: I.bottle.duration, ease: MOTION.ease.out }, I.at.bottle);
+          // slow pulse on the scroll hint once the entrance is done
+          tl.add(() => {
+            gsap.to(".hero-hint-line", {
+              scaleY: 0.45,
+              opacity: 0.35,
+              transformOrigin: "top center",
+              duration: I.hint.pulse / 2,
+              ease: "sine.inOut",
+              yoyo: true,
+              repeat: -1,
+            });
+          });
+        }
+      };
+
+      let started = false;
+      const start = () => {
+        if (started) return;
+        started = true;
+        play();
+      };
+      if (bottleScrollState.ready) start();
+      window.addEventListener(BOTTLE_READY_EVENT, start);
+      const failSafe = window.setTimeout(start, I.failSafeMs);
+      return () => {
+        window.removeEventListener(BOTTLE_READY_EVENT, start);
+        window.clearTimeout(failSafe);
+      };
+    },
+    { scope: heroRef }
+  );
+
   return (
     <section
+      ref={heroRef}
       id="hero-section"
-      className="relative h-screen w-full flex items-center justify-center overflow-hidden select-none bg-[#040812]"
+      className="relative min-h-screen w-full flex flex-col justify-between items-center pt-28 sm:pt-32 pb-8 sm:pb-10 px-4 pointer-events-none select-none z-20"
     >
-      {/* Background Atmosphere */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,42,88,0.45)_0%,rgba(4,8,18,0.98)_75%)] pointer-events-none" />
-      <div className="absolute inset-0 bg-noise opacity-20 pointer-events-none" />
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[550px] bg-blue-600/[0.08] rounded-full blur-[180px] pointer-events-none" />
-
-      {/* Giant REVAÔM Typography sitting BEHIND the bottle (Apple effect) */}
-      <div className="hero-fade absolute inset-0 flex items-center justify-center text-center pointer-events-none select-none z-0">
-        <span className="font-cinzel text-[22vw] font-black text-white/[0.035] tracking-[0.14em] block whitespace-nowrap leading-none">
+      {/* Giant Watermark BEHIND Bottle */}
+      <div className="hero-watermark absolute inset-0 flex items-center justify-center text-center pointer-events-none select-none -z-10">
+        <span className="font-cinzel text-[22vw] font-black text-[#eee4d8]/[0.028] tracking-[0.14em] block whitespace-nowrap leading-none">
           REVAÔM
         </span>
       </div>
 
-      {/* Minimal Top Brand Sub-Header */}
-      <div className="hero-fade absolute top-28 sm:top-32 inset-x-0 flex flex-col items-center text-center z-10 pointer-events-none px-4">
-        <span className="text-[10px] sm:text-xs font-mono tracking-[0.4em] text-cyan-300 uppercase">
-          ACTIVIQ™ CELLULAR CONCENTRATE
+      {/* Top Brand Sub-Header */}
+      <div className="hero-text-overlay flex flex-col items-center text-center pointer-events-none">
+        <span className="hero-eyebrow text-[10px] sm:text-xs font-mono tracking-[0.4em] text-[#eee4d8]/60 uppercase">
+          ACTIVIQ™ CLARIFYING CONCENTRATE
         </span>
-        <h1 className="font-cinzel text-2xl sm:text-3xl lg:text-4xl text-white font-light tracking-[0.2em] mt-1 uppercase">
-          POISE
+        <h1
+          className="font-cinzel text-3xl sm:text-4xl lg:text-5xl text-[#eee4d8] font-light tracking-[0.2em] mt-1.5 uppercase"
+          aria-label={HEADING}
+        >
+          {HEADING.split("").map((ch, i) => (
+            <span key={i} className="inline-block overflow-hidden align-bottom" aria-hidden>
+              <span className="hero-letter inline-block will-change-transform">{ch}</span>
+            </span>
+          ))}
         </h1>
-        <p className="font-cormorant italic text-lg sm:text-xl text-blue-200/80 font-light -mt-0.5">
-          Anti-Aging Serum
+        <p className="hero-subline font-cormorant italic text-lg sm:text-xl text-[#eee4d8]/75 font-light -mt-0.5">
+          Clarifying Serum for Acne-Prone Skin
         </p>
       </div>
 
-      {/* THE POISE BOTTLE (Pinned by ScrollTrigger and translated directly into Section 2 Left Column) */}
-      <div
-        id="scrub-poise-bottle"
-        className="relative z-20 flex items-center justify-center will-change-transform pointer-events-none"
-      >
-        <div className="relative w-[220px] sm:w-[260px] lg:w-[320px] h-[420px] sm:h-[480px] lg:h-[580px] flex items-center justify-center">
-          {/* Subtle Ambient Reflection */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-44 sm:w-56 h-6 bg-black/80 rounded-full blur-xl pointer-events-none" />
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-40 sm:w-52 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent blur-[1px] pointer-events-none" />
-
-          <Image
-            src="/images/poise-bottle-cutout.png"
-            alt="REVAÔM POISE Serum Bottle"
-            fill
-            priority
-            sizes="(max-width: 768px) 260px, 420px"
-            className="object-contain filter drop-shadow-[0_30px_60px_rgba(2,6,18,0.98)] select-none"
-          />
+      {/* Bottom block: shop controls + scroll prompt */}
+      <div className="hero-text-overlay flex flex-col items-center gap-5 sm:gap-6">
+        <div className="flex flex-col items-center gap-3 pointer-events-auto">
+          <div className="flex items-center gap-4 sm:gap-5">
+            <p className="hero-shop-item flex items-baseline gap-2">
+              <span className="font-cinzel text-2xl sm:text-3xl text-[#eee4d8] tracking-wider">{formatPrice(heroShop.price)}</span>
+              {heroShop.compareAt && (
+                <s className="font-cinzel text-sm text-[#eee4d8]/40">{formatPrice(heroShop.compareAt)}</s>
+              )}
+              <span className="text-[9px] font-mono tracking-[0.25em] text-[#eee4d8]/50 uppercase">{heroShop.size}</span>
+            </p>
+            <a
+              href="#products"
+              onClick={(e) => {
+                e.preventDefault();
+                onShop?.();
+              }}
+              className="hero-shop-item inline-flex items-center rounded-full bg-[#eee4d8] text-[#1a0409] px-6 sm:px-7 py-2.5 sm:py-3 text-[10px] font-mono font-semibold tracking-[0.3em] uppercase transition-colors duration-300 hover:bg-white"
+            >
+              {heroShop.ctaLabel}
+            </a>
+          </div>
+          <ul className="hero-shop-item flex flex-wrap justify-center gap-x-4 gap-y-1 text-[9px] font-mono tracking-[0.2em] text-[#eee4d8]/55 uppercase">
+            {heroShop.trust.map((t) => (
+              <li key={t} className="flex items-center gap-1.5">
+                <Check className="w-3 h-3 text-[#c9506b]" aria-hidden />
+                {t}
+              </li>
+            ))}
+          </ul>
         </div>
-      </div>
 
-      {/* Minimal Bottom Scroll Indicator */}
-      <div
-        onClick={onExplore}
-        className="hero-fade absolute bottom-8 inset-x-0 flex flex-col items-center gap-2 pointer-events-auto cursor-pointer z-10 group"
-      >
-        <span className="text-[9px] font-mono tracking-[0.3em] text-slate-400 group-hover:text-cyan-300 transition-colors uppercase">
-          Scroll to explore
-        </span>
-        <div className="w-[1px] h-6 bg-gradient-to-b from-cyan-400/60 to-transparent group-hover:h-9 transition-all" />
+        <button
+          type="button"
+          onClick={onExplore}
+          className="hero-hint flex flex-col items-center gap-2 pointer-events-auto cursor-pointer group"
+        >
+          <span className="text-[9px] font-mono tracking-[0.3em] text-[#eee4d8]/40 group-hover:text-[#eee4d8]/80 transition-colors uppercase">
+            Scroll to explore
+          </span>
+          <span className="hero-hint-line block w-[1px] h-6 bg-gradient-to-b from-[#eee4d8]/50 to-transparent group-hover:h-9 transition-all" />
+        </button>
       </div>
     </section>
   );
