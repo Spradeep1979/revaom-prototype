@@ -1,26 +1,145 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-cinzel: 'Cinzel', serif;
+  --font-cormorant: 'Cormorant Garamond', Georgia, serif;
+  --font-jakarta: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  
+  /* POISE Rich Navy Blue Palette */
+  --navy-950: #060c18;
+  --navy-900: #0b172a;
+  --navy-850: #0f213d;
+  --navy-800: #152d52;
+  --navy-700: #1c3c6d;
+  --navy-600: #254e8c;
+  --sapphire-accent: #38bdf8;
+  --white-crisp: #f8fafc;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--navy-950);
+  color: #f1f5f9;
+  font-family: var(--font-jakarta);
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography Helpers */
+.font-cinzel {
+  font-family: var(--font-cinzel);
+}
+
+.font-cormorant {
+  font-family: var(--font-cormorant);
+}
+
+.font-jakarta {
+  font-family: var(--font-jakarta);
+}
+
+/* Glassmorphism Navy Luxury Styling */
+.luxury-glass-navy {
+  background: rgba(11, 23, 42, 0.78);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.luxury-card-navy {
+  background: linear-gradient(145deg, rgba(15, 33, 61, 0.9) 0%, rgba(8, 16, 31, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 30px 65px -15px rgba(2, 6, 18, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.luxury-glass-subtle {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Noise overlay */
+.bg-noise {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #060c18;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1c3c6d;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #254e8c;
+}
+
+/* Hotspot Pulse Animation */
+@keyframes hotspotPing {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.hotspot-pulse {
+  animation: hotspotPing 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.mask-marquee {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+/* Luxury Archway Silhouette (Noolam Reference) */
+.luxury-arch-css {
+  clip-path: polygon(
+    0% 100%,
+    0% 28%,
+    2% 19%,
+    6% 12%,
+    12% 6%,
+    20% 2.5%,
+    32% 0.8%,
+    50% 0%,
+    68% 0.8%,
+    80% 2.5%,
+    88% 6%,
+    94% 12%,
+    98% 19%,
+    100% 28%,
+    100% 100%
+  );
+}
+
+.perspective-1500 {
+  perspective: 1500px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
 }

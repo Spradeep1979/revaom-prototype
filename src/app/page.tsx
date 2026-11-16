@@ -1,69 +1,167 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Navbar from "@/components/Navbar";
+import HeroSection from "@/components/HeroSection";
+import FormulaSection from "@/components/FormulaSection";
+import ArchwaySection from "@/components/ArchwaySection";
+import OverlappingCarousel from "@/components/OverlappingCarousel";
+import RitualSection from "@/components/RitualSection";
+import CartDrawer from "@/components/CartDrawer";
 
 export default function Home() {
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(1);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      const bottle = document.getElementById("scrub-poise-bottle");
+      const hero = document.getElementById("hero-section");
+      const formula = document.getElementById("formula-section");
+
+      if (!bottle || !hero || !formula) return;
+
+      const getTargetDelta = () => {
+        const bottle = document.getElementById("scrub-poise-bottle");
+        const target = document.getElementById("bottle-landing-zone");
+        if (!bottle || !target) return { x: -window.innerWidth * 0.24 };
+
+        const bRect = bottle.getBoundingClientRect();
+        const tRect = target.getBoundingClientRect();
+
+        return {
+          x: (tRect.left + tRect.width / 2) - (bRect.left + bRect.width / 2),
+        };
+      };
+
+      // 1. PIN BOTTLE continuously while viewing Hero and Section 2
+      ScrollTrigger.create({
+        trigger: hero,
+        endTrigger: formula,
+        start: "top top",
+        end: "bottom bottom",
+        pin: bottle,
+        pinSpacing: false,
+      });
+
+      // 2. SCRUB TIMELINE: Bottle translates smoothly into Section 2 Left Column as user scrolls
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: hero,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1, // Smooth Apple-style weighted scrub
+          invalidateOnRefresh: true,
+        },
+      });
+
+      // Fade out hero watermark & text
+      tl.to(
+        ".hero-fade",
+        {
+          opacity: 0,
+          y: -50,
+          ease: "power1.out",
+          duration: 0.35,
+        },
+        0
+      );
+
+      // Move bottle from center to Left Column of 50/50 grid
+      tl.to(
+        bottle,
+        {
+          x: () => getTargetDelta().x,
+          scale: () => (window.innerWidth < 640 ? 0.75 : window.innerWidth < 1024 ? 0.82 : 0.88),
+          ease: "power2.inOut",
+          duration: 1,
+        },
+        0
+      );
+
+      // 3. Section 2 right column typography reveals as Section 2 enters
+      gsap.from(".formula-reveal-content", {
+        opacity: 0,
+        y: 60,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: formula,
+          start: "top 75%",
+          end: "top 25%",
+          scrub: 1,
+        },
+      });
+
+      // 4. Fade out bottle when entering Section 3 (Archways) so it doesn't overlap
+      ScrollTrigger.create({
+        trigger: "#archway-section",
+        start: "top 80%",
+        onEnter: () => gsap.to(bottle, { opacity: 0, duration: 0.2 }),
+        onLeaveBack: () => gsap.to(bottle, { opacity: 1, duration: 0.2 }),
+      });
+    });
+
+    return () => {
+      ctx.revert();
+    };
+  }, []);
+
+  const handleAddToCart = () => {
+    setCartCount((prev) => prev + 1);
+  };
+
+  const handleScrollToRitual = () => {
+    const el = document.getElementById("ritual-section");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleScrollToFormula = () => {
+    const el = document.getElementById("formula-section");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="relative bg-[#040812] text-[#f1f5f9] min-h-screen flex flex-col overflow-x-hidden">
+      {/* 1. Ultra-Minimalist Floating Header */}
+      <Navbar
+        cartCount={cartCount}
+        onOpenCart={() => setCartOpen(true)}
+        onAcquire={handleScrollToRitual}
+      />
+
+      {/* 2. SECTION 01: Hero Section (Oversized centered bottle & giant REVAÔM) */}
+      <HeroSection onExplore={handleScrollToFormula} />
+
+      {/* 3. SECTION 02: Formula Section (50/50 Grid with Bottle Landing Zone) */}
+      <FormulaSection onAddToCart={handleAddToCart} />
+
+      {/* 4. SECTION 03: Archway Scroll Masks (Four expanding portals) */}
+      <ArchwaySection />
+
+      {/* 5. SECTION 04: 3D Overlapping Drag Carousel (Large cards, spacious negative space) */}
+      <OverlappingCarousel onAddToCart={handleAddToCart} />
+
+      {/* 6. SECTION 05: Final Ritual & Minimalist Acquisition */}
+      <RitualSection
+        onAddToCart={handleAddToCart}
+        onOpenCart={() => setCartOpen(true)}
+      />
+
+      {/* Slide-out Cart Drawer */}
+      <CartDrawer
+        isOpen={cartOpen}
+        onClose={() => setCartOpen(false)}
+        count={cartCount}
+        setCount={setCartCount}
+      />
+    </main>
   );
 }
