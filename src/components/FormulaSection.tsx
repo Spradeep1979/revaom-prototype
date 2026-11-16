@@ -10,7 +10,7 @@ export default function FormulaSection({ onAddToCart }: FormulaSectionProps) {
   return (
     <section
       id="formula-section"
-      className="relative min-h-screen w-full flex items-center justify-center px-6 sm:px-10 lg:px-16 py-16 sm:py-20 bg-[#050b16] select-none"
+      className="relative min-h-screen w-full flex items-center justify-center px-6 sm:px-10 lg:px-16 pt-28 sm:pt-36 pb-52 sm:pb-64 bg-[#050b16] select-none"
     >
       {/* Background Atmosphere */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_35%_50%,rgba(18,44,90,0.35)_0%,rgba(5,11,22,0.98)_75%)] pointer-events-none" />

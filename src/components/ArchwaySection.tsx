@@ -113,7 +113,7 @@ export default function ArchwaySection() {
     <section
       ref={sectionRef}
       id="archway-section"
-      className="relative h-screen w-full flex flex-col justify-center items-center px-6 sm:px-12 lg:px-20 overflow-hidden select-none bg-[#040812]"
+      className="relative min-h-screen w-full flex flex-col justify-center items-center px-6 sm:px-12 lg:px-20 py-36 sm:py-48 overflow-hidden select-none bg-[#040812]"
     >
       {/* Background Atmosphere */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(14,34,72,0.4)_0%,rgba(4,8,18,0.98)_75%)] pointer-events-none" />

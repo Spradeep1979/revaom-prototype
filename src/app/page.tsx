@@ -43,9 +43,10 @@ export default function Home() {
         trigger: hero,
         endTrigger: formula,
         start: "top top",
-        end: "bottom bottom",
+        end: "90% top",
         pin: bottle,
         pinSpacing: false,
+        anticipatePin: 1,
       });
 
       // 2. SCRUB TIMELINE: Bottle translates smoothly into Section 2 Left Column as user scrolls
@@ -96,12 +97,18 @@ export default function Home() {
         },
       });
 
-      // 4. Fade out bottle when entering Section 3 (Archways) so it doesn't overlap
-      ScrollTrigger.create({
-        trigger: "#archway-section",
-        start: "top 80%",
-        onEnter: () => gsap.to(bottle, { opacity: 0, duration: 0.2 }),
-        onLeaveBack: () => gsap.to(bottle, { opacity: 1, duration: 0.2 }),
+      // 4. Smooth Exit from Section 2: Bottle scrolls naturally up and fades out before Archway section enters
+      gsap.to(bottle, {
+        y: -180,
+        opacity: 0,
+        ease: "power1.in",
+        scrollTrigger: {
+          trigger: formula,
+          start: "50% top",
+          end: "85% top",
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
       });
     });
 

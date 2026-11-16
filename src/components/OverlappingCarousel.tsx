@@ -135,7 +135,7 @@ export default function OverlappingCarousel({ onAddToCart }: OverlappingCarousel
   return (
     <section
       id="showcase-section"
-      className="relative min-h-screen w-full flex flex-col justify-center items-center px-6 sm:px-12 lg:px-20 py-32 sm:py-40 overflow-hidden select-none bg-[#050b16]"
+      className="relative min-h-screen w-full flex flex-col justify-center items-center px-6 sm:px-12 lg:px-20 py-36 sm:py-48 overflow-hidden select-none bg-[#050b16]"
     >
       {/* Background Navy Glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,40,82,0.4)_0%,rgba(5,11,22,0.98)_75%)] pointer-events-none" />
